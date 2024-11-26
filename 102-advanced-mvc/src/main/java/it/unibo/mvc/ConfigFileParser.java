@@ -11,12 +11,13 @@ import it.unibo.mvc.Configuration.Builder;;
  */
 public class ConfigFileParser {
     private final Configuration config;
+    private final Builder builder;
     /**
      * 
      * @param filename
      */
     public ConfigFileParser(final String filename){
-        final Builder builder = new Builder();
+        builder = new Builder();
         try (final BufferedReader in = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = in.readLine()) != null) {
@@ -51,6 +52,14 @@ public class ConfigFileParser {
     public Configuration getConfig(){
         return config;
     }
+    /**
+     * 
+     * @return
+     */
+    public Builder getBuilder(){
+        return builder;
+    }
+
     /**
      * 
      * @param args

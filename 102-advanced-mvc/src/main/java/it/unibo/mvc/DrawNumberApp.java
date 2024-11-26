@@ -1,16 +1,13 @@
 package it.unibo.mvc;
 
 import java.io.FileNotFoundException;
+import java.lang.module.ModuleDescriptor.Builder;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
-
     private final DrawNumber model;
     private final List<DrawNumberView> views;
 
@@ -23,11 +20,27 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
          * Side-effect proof
          */
         this.views = Arrays.asList(Arrays.copyOf(views, views.length));
+        final int min;
+        final int max;
+        final int attempts;
         for (final DrawNumberView view: views) {
             view.setObserver(this);
             view.start();
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        Configuration config = new Configuration.Builder().build();
+        try {
+            final ConfigFileParser configFileParser = new ConfigFileParser("ssrc/main/resources/config.yml");
+            config = configFileParser.getConfig();
+            min = config.getMin();
+            max = config.getMax();
+            attempts = config.getAttempts();
+        } catch (IllegalArgumentException e) {
+            for (final DrawNumberView view: views) {
+                view.displayError("Error while opeaning the file");
+            }
+        }finally{
+        }
+        this.model = new DrawNumberImpl(config.getMin() , config.getMax(), config.getAttempts());
     }
 
     @Override
