@@ -20,9 +20,6 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
          * Side-effect proof
          */
         this.views = Arrays.asList(Arrays.copyOf(views, views.length));
-        final int min;
-        final int max;
-        final int attempts;
         for (final DrawNumberView view: views) {
             view.setObserver(this);
             view.start();
@@ -31,9 +28,6 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
         try {
             final ConfigFileParser configFileParser = new ConfigFileParser("ssrc/main/resources/config.yml");
             config = configFileParser.getConfig();
-            min = config.getMin();
-            max = config.getMax();
-            attempts = config.getAttempts();
         } catch (IllegalArgumentException e) {
             for (final DrawNumberView view: views) {
                 view.displayError("Error while opeaning the file");
